@@ -5,6 +5,7 @@
 > * 译者：[Cherry](https://github.com/sunshine940326)
 > * 校对者：[LeviDing](https://github.com/leviding)、[undead25](https://github.com/undead25)
 
+
 # 学习 React.js 比你想象的要简单
 
 ## 通过 Medium 中的一篇文章来学习 React.js 的基本原理
@@ -16,7 +17,7 @@
 
 这篇文章不是讲什么是 React 或者 [你该怎样学习 React](https://medium.freecodecamp.org/yes-react-is-taking-over-front-end-development-the-question-is-why-40837af8ab76)。这是在面向那些已经熟悉了 JavaScript 和 [DOM API](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) 的人的 React.js 基本原理介绍
 
-> 本文采用嵌入式 jsComplete 代码段，所以为了方便阅读，你需要一个合适的屏幕宽度。
+*本文采用嵌入式 jsComplete 代码段，所以为了方便阅读，你需要一个合适的屏幕宽度
 
 下面所有的代码都仅供参考。它们也纯粹是为了表达概念而提供的例子。它们中的大多数有更好的实践方式。
 
@@ -24,7 +25,7 @@
 
 ---
 
-#### 1 React 全部都是组件化的
+#### 1 React 就是一切皆组件
 
 React 是围绕可重用组件的概念设计的。你定义小组件并将它们组合在一起形成更大的组件。
 
@@ -32,7 +33,7 @@ React 是围绕可重用组件的概念设计的。你定义小组件并将它�
 
 React 组件最简单的形式，就是一个普通的 JavaScript 函数：
 
-```js
+```
 function Button (props) {
   // 这里返回一个 DOM 元素，例如：
   return <button type="submit">{props.label}</button>;
@@ -40,22 +41,24 @@ function Button (props) {
 // 将按钮组件呈现给浏览器
 ReactDOM.render(<Button label="Save" />, mountNode)
 ```
+<center>例 1：编辑上面的代码并按 Ctrl+Enter 键执行</center>>
+（译者注：译文暂时没有这个功能，请访问原文使用此功能，下同）
 
-例 1：编辑上面的代码并按 Ctrl+Enter 键执行（译者注：译文暂时没有这个功能，请访问原文使用此功能，下同）
-
-> 括号中的 button 标签将稍后解释。现在不要担心它们。`ReactDOM` 也将稍后解释，但如果你想测试这个例子和所有接下来的例子，上述 `render` 函数是必须的。（React 将要接管和控制的是 `ReactDOM.render` 的第 2 个参数即目标 DOM 元素）。在 jsComplete REPL 中，你可以使用特殊的变量 `mountNode`。
+> 括号中的 button 标签将稍后解释。现在不要担心它们。`ReactDOM` 也将稍后解释，但如果你想测试这个例子和所有接下来的例子，上述 `render` 函数是你所需的。（React 将要接管和控制的是 `ReactDOM.render` 的第 2 个参数即目标 DOM 元素）。在 jsComplete REPL 中，你可以使用特殊的变量 `mountNode`。
 
 例 1 的注意事项：
 
 - 组件名称首字母大写，`Button`。必须要这样做是因为我们将处理 HTML 元素和 React 元素的混合。小写名称是为 HTML 元素保留的。事实上，将 React 组件命名为 “button” 然后你就会发现 ReactDOM 会忽略这个函数，仅仅是将其作为一个普通的空 HTML 按钮来渲染。
+
 - 每个组件都接收一个属性列表，就像 HTML 元素一样。在 React 中，这个列表被称为**属性**。虽然你可以将一个函数随意命名。
+
 - 在上面 Button 函数组件的返回输出中，我们奇怪地写了段看上去像 HTML 的代码。这实际上既不是 JavaScript 也不是 HTML，老实说，这甚至不是 React.js。然而它非常流行，以至于成为 React 应用程序中的默认值。这就是所谓的 [**JSX**](https://facebook.github.io/jsx/)，这是一个JavaScript 的扩展。JSX 也是一个**折中方案**！继续尝试并在上面的函数中返回其他 HTML 元素，看看它们是如何被支持的（例如，返回一个文本输入元素）。
 
 #### 2 JSX 输出的是什么？
 
 上面的例 1 可以用没有 JSX 的纯 React.js 编写，如下：
 
-```js
+```
 function Button (props) {
   return React.createElement(
     "button",
@@ -63,7 +66,6 @@ function Button (props) {
     props.label
   );
 }
-
 // 要使用 Button，你可以这么做
 ReactDOM.render(
   React.createElement(Button, { label: "Save" }),
@@ -71,7 +73,7 @@ ReactDOM.render(
 );
 ```
 
-例 2：不使用 JSX 编写 React 组件
+<center>例 2：不使用 JSX 编写 React 组件</center>
 
 在 React 顶级 API 中，`createElement` 函数是主函数。这是你需要学习的 7 个 API 中的 1 个。React 的 API 就是这么小。
 
@@ -79,9 +81,9 @@ ReactDOM.render(
 
 不像 `document.createElement`，React 的 `createElement` 在接收第二个参数后，接收一个动态参数，它表示所创建元素的子元素。所以 `createElement` 实际上创建了一个**树**。
 
-这里就是这样的一个例子：
+这里就是这样的一个例子（底层实现,函数化组件）：
 
-```js
+```
 const InputForm = React.createElement(
   "form",
   { target: "_blank", action: "https://google.com/search" },
@@ -102,7 +104,7 @@ function Button (props) {
 // 然后我们可以通过 .render 方法直接使用 InputForm
 ReactDOM.render(InputForm, mountNode);
 ```
-例 3：React 创建元素的 API
+<center>例 3：React 创建元素的 API</center>
 
 上面例子中的一些事情值得注意：
 
@@ -115,7 +117,7 @@ ReactDOM.render(InputForm, mountNode);
 
 上述的代码是当你引入 React 库的时候浏览器是怎样理解的。浏览器不会处理任何 JSX 业务。然而，我们更喜欢看到和使用 HTML，而不是那些 `createElement` 调用（想象一下只使用 `document.createElement` 构建一个网站！）。这就是 JSX 存在的原因。取代上述调用 `React.createElement` 的方式，我们可以使用一个非常简单类似于 HTML 的语法：
 
-```js
+```
 const InputForm =
   <form target="_blank" action="https://google.com/search">
     <div>Enter input and click Search</div>
@@ -134,7 +136,7 @@ function Button (props) {
 ReactDOM.render(InputForm, mountNode);
 ```
 
-例 4：为什么在 React 中 JSX 受欢迎（和例 3 相比）
+<center>例 4：为什么在 React 中 JSX 受欢迎（和例 3 相比）</center>  
 
 注意上面的几件事：
 
@@ -145,7 +147,7 @@ ReactDOM.render(InputForm, mountNode);
 
 这就是 JSX。这是一种折中的方案，允许我们用类似 HTML 的语法来编写我们的 React 组件，这是一个很好的方法。
 
-> “Flux” 在头部作为韵脚来使用，但它也是一个非常受欢迎的 [应用架构](https://facebook.github.io/flux/)，由 Facebook 推广。最出名的是 Redux，Flux 和 React 非常合适。
+> “Flux” 在头部作为韵脚来使用，但它也是一个非常受欢迎的 [应用架构application architecture](https://facebook.github.io/flux/)，由 Facebook 推广。最出名的是 Redux，Flux 和 React 非常合适。
 
 JSX，可以单独使用，不仅仅适用于 React。
 
@@ -153,19 +155,18 @@ JSX，可以单独使用，不仅仅适用于 React。
 
 在 JSX 中，你可以在一对花括号内使用任何 JavaScript 表达式。
 
-```js
+```
 const RandomValue = () =>
   <div>
     { Math.floor(Math.random() * 100) }
   </div>;
-
 // 使用：
 ReactDOM.render(<RandomValue />, mountNode);
 ```
 
-例 5：在 JSX 中使用 JavaScript 表达式
+<center>例 5：在 JSX 中使用 JavaScript 表达式</center>
 
-任何 JavaScript 表达式可以直接放在花括号中。这相当于在 JavaScript 中插入 `${}` [模板](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)。
+任何 JavaScript 表达式可以直接放在花括号中。这相当于在 JavaScript 中插入 `${}` [模板 template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)。
 
 这是 JSX 内唯一的约束：只有表达式。例如，你不能使用 `if` 语句，但三元表达式是可以的。
 
@@ -173,7 +174,7 @@ JavaScript 变量也是表达式，所以当组件接受属性列表时（不包
 
 JavaScript 对象也是表达式。有些时候我们在花括号中使用 JavaScript 对象，这看起来像是使用了两个花括号，但是在花括号中确实只有一个对象。其中一个用例就是将 CSS 样式对象传递给响应中的特殊样式属性：
 
-```js
+```
 const ErrorDisplay = ({message}) =>
   <div style={ { color: 'red', backgroundColor: 'yellow' } }>
     {message}
@@ -187,13 +188,13 @@ ReactDOM.render(
   mountNode
 );
 ```
-例 6：一个对象传递特殊的 React 样式参数
+<center>例 6：一个对象传递特殊的 React 样式参数</center>
 
-注意我**解构**的只是在属性参数之外的信息。这只是 JavaScript。还要注意上面的样式属性是一个特殊的属性（同样，它不是 HTML，它更接近 DOM API）。我们使用一个对象作为样式属性的值并且这个对象定义样式就像我们使用 JavaScript 那样（我们可以这样做）。
+注意我**解构(destructured )**的只是在属性参数之外的信息。这只是 JavaScript。还要注意上面的样式属性是一个特殊的属性（同样，它不是 HTML，它更接近 DOM API）。我们使用一个对象作为样式属性的值并且这个对象定义样式就像我们使用 JavaScript 那样（我们可以这样做）。
 
 你可以在 JSX 中使用 React 元素。因为这也是一个表达式（记住，一个 React 元素只是一个函数调用）：
 
-```js
+```
 const MaybeError = ({errorMessage}) =>
   <div>
     {errorMessage && <ErrorDisplay message={errorMessage} />}
@@ -214,14 +215,14 @@ ReactDOM.render(
 );
 ```
 
-例 7：一个 React 元素是一个可以通过 {} 使用的表达式
+<center>例 7：一个 React 元素是一个可以通过 {} 使用的表达式</center>
 
 上述 `MaybeError` 组件只会在有 `errorMessage` 传入或者另外有一个空的 `div` 才会显示 `ErrorDisplay` 组件。React 认为 `{true}`、 `{false}`
 `{undefined}` 和 `{null}` 是有效元素，不呈现任何内容。
 
 我们也可以在 JSX 中使用所有的 JavaScript 的集合方法（`map`、`reduce` 、`filter`、 `concat` 等）。因为他们返回的也是表达式：
 
-```js
+```
 const Doubler = ({value=[1, 2, 3]}) =>
   <div>
     {value.map(e => e * 2)}
@@ -230,16 +231,15 @@ const Doubler = ({value=[1, 2, 3]}) =>
 // 使用下面内容 
 ReactDOM.render(<Doubler />, mountNode);
 ```
+<center>例 8：在 {} 中使用数组</center>
 
-例 8：在 {} 中使用数组
-
-请注意我是如何给出上述 `value` 属性的默认值的，因为这全部都只是 JavaScript。注意我只是在 div 中输出一个数组表达式。React 是完全可以的。它只会在文本节点中放置每一个加倍的值。
+请注意我是如何给出上述 `value` 属性的默认值的，因为这全部都只是 JavaScript。注意我只是在 div 中输出一个数组表达式。React 是完全可以的。它只会在文本节点(text node)中放置每一个加倍的值。
 
 #### 4 你可以使用 JavaScript 类写 React 组件
 
 简单的函数组件非常适合简单的需求，但是有的时候我们需要的更多。React 也支持通过使用 [JavaScript 类](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)来创建组件。这里 `Button` 组件（在例 1 中）就是使用类的语法编写的。
 
-```js
+```
 class Button extends React.Component {
   render() {
     return <button>{this.props.label}</button>;
@@ -250,15 +250,15 @@ class Button extends React.Component {
 ReactDOM.render(<Button label="Save" />, mountNode);
 ```
 
-例 9：使用 JavaScript 类创建组件
+<center>例 9：使用 JavaScript 类创建组件</center>
 
-类的语法是非常简单的：定义一个扩展的 `React.Component` 类（另一个你需要学习的 React 的顶级 API）。该类定义了一个单一的实例函数 —— `render()`，并使函数返回虚拟 DOM 对象。每一次我们使用基于类的 `Button` 组件（例如，通过 `<Button ... />`）,React 将从这个基于类的组件中实例化对象，并在 DOM 树中使用该对象。
+类的语法是非常简单的：定义一个扩展的 `React.Component` 类（另一个你需要学习的 React 的顶级 API）。该类定义了一个单一的实例函数 —— `render()`，并使函数返回虚拟 DOM 对象。每一次我们使用基于类的 `Button` 组件（例如，通过 `<Button ... />`）,React 将从这个基于类的组件(class-based component)中实例化对象，并在 DOM 树中使用该对象。
 
-这就是为什么上面的例子中我们可以在 JSX 中使用 `this.props.label` 渲染输出的原因，因为每一个组件都有一个特殊的称为 `props` 的 **实例** 属性，这让所有的值传递给该组件时被实例化。
+这就是为什么上面的例子中我们可以在 JSX 中使用 `this.props.label` 渲染输出的原因，因为每一个组件都有一个特殊的称为 `props` 的 **实例(instance)** 属性，这让所有的值传递给该组件时被实例化。
 
-由于我们有一个与组件的单个使用相关联的实例，所以我们可以按照自己的意愿定制该实例。例如，我们可以通过使用常规 JavaScript 构造函数来构造它：
+由于我们有一个与组件的单个使用相关联的(associated with)实例，所以我们可以按照自己的意愿定制(customize)该实例。例如，我们可以通过使用常规 JavaScript 构造函数来构造它：
 
-```js
+```
 class Button extends React.Component {
   constructor(props) {
     super(props);
@@ -273,11 +273,11 @@ class Button extends React.Component {
 ReactDOM.render(<Button label="Save" />, mountNode);
 ```
 
-例 10：自定义组件实例
+<center>例 10：自定义组件实例</center>
 
 我们也可以定义类的原型并且在任何我们希望的地方使用，包括在返回的 JSX 输出的内部：
 
-```js
+```
 class Button extends React.Component {
   clickCounter = 0;
 
@@ -298,13 +298,16 @@ class Button extends React.Component {
 ReactDOM.render(<Button label="Save" />, mountNode);
 ```
 
-例 11：使用类的属性（通过单击保存按钮进行测试）
+<center>例 11：使用类的属性（通过单击保存按钮进行测试）</center>
 
 注意上述例 11 中的几件事情
 
-- `handleClick` 函数使用 JavaScript 新提出的 [class-field syntax](https://github.com/tc39/proposal-class-fields) 语法。这仍然是 stage-2，但是这是访问组件安装实例（感谢箭头函数）最好的选择（因为很多原因）。然而，你需要使用类似 Babel 的编译器解码为 stage-2（或者仅仅是类字段语法）来让上述代码工作。 jsComplete REPL 有预编译功能。
+- `handleClick` 函数使用 JavaScript 新提出的 [class-field syntax](https://github.com/tc39/proposal-class-fields) 语法。这仍然是 stage-2，但是这是访问组件安装实例（感谢箭头函数）最好的选择（因为很多原因）。然而，你需要使用类似 Babel 的编译器解码为 stage-2（或者仅仅是类字段语法）来让上述代码工作。 jsComplete REPL 有预编译(pre-configured)功能。
+- 我们利用同样的类领域（class-field）语法也定义了`clickCounter`实例变量，这允许我们跳过一个class constructor的一并调用。
+- 当我们特殊化`handleClick`函数以作为react属性值，我们并没调用它。我们仅仅传递给`handleClick`函数的*引用(reference )*。在那个层次调用函数是使用react的常见错误之一
 
-```js
+
+```
 // 错误：
 onClick={this.handleClick()}
 
@@ -317,12 +320,11 @@ onClick={this.handleClick}
 当处理 React 元素中的事件时，我们与 DOM API 的处理方式有两个非常重要的区别：
 
 - 所有 React 元素属性（包括事件）都使用 **camelCase** 命名，而不是 **lowercase**。例如是 `onClick` 而不是 `onclick`。
-- 我们将实际的 JavaScript 函数引用传递给事件处理程序，而不是字符串。例如是 `onClick={handleClick}` 而不是 `onClick="handleClick"`。
+- 我们将实际的 JavaScript 函数引用(reference)传递给事件处理程序，而不是字符串。例如是 `onClick={handleClick}` 而不是 `onClick="handleClick"`。
 
 React 用自己的对象包装 DOM 对象事件以优化事件处理的性能，但是在事件处理程序内部，我们仍然可以访问 DOM 对象上所有可以访问的方法。React 将经过包装的事件对象传递给每个调用函数。例如，为了防止表单提交默认提交操作，你可以这样做：
 
-
-```js
+```
 class Form extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
@@ -342,7 +344,7 @@ class Form extends React.Component {
 ReactDOM.render(<Form />, mountNode);
 ```
 
-例 12：使用包装过的对象
+<center>例 12：使用包装过的对象???</center>
 
 #### 6 每一个 React 组件都有一个故事：第 1 部分
 
@@ -356,17 +358,17 @@ ReactDOM.render(<Form />, mountNode);
 6. 因为这是 React 第一次渲染元素，React 将会与浏览器连通（代表我们使用 DOM API）来显示元素。这整个过程称为 **mounting**。
 7. 接下来 React 调用另一个生命周期函数，称为 `componentDidMount`。我们可以这样使用这个方法，例如：在 DOM 上做一些我们现在知道的在浏览器中存在的东西。在此生命周期方法之前，我们使用的 DOM 都是虚拟的。
 8. 一些组件的故事到此结束，其他组件得到卸载浏览器 DOM 中的各种原因。在后一种情况发生时，会调用另一个生命周期的方法，`componentWillUnmount`。
-9. 任何 mounted 的元素的**状态**都可能会改变。该元素的父级可能会重新渲染。无论哪种情况，mounted 的元素都可能接收到不同的属性集。React 的魔力就是这儿，我们实际上需要的正是 React 的这一点！在这一点之前，说实话，我们并不需要 React。
-10. 组价的故事还在继续，但是在此之前，我们需要理解我所说的这种**状态**。
+9. 任何 mounted 的元素的 **状态**都可能会改变。该元素的父级可能会重新渲染。无论哪种情况，mounted 的元素都可能接收到不同的属性集。React 的魔力就是这儿，我们实际上需要的正是 React 的这一点！在这一点之前，说实话，我们并不需要 React。
+10. 组价的故事还在继续，但是在此之前，我们需要理解我所说的这种 **状态**。
 
 #### 7 React 组件可以具有私有状态
 
-以下只适用于类组件。我有没有提到有人叫表象而已的部件 **dumb**？
+以下只适用于类组件。我有没有提到有人叫表象而已(presentational-only)的组件 **dumb**？
 
-状态类是任何 React 类组件中的一个特殊字段。React 检测每一个组件状态的变化，但是为了 React 更加有效，我们必须通过 React 的另一个 API 改变状态字段，这就是我们要学习的另一个 API —— `this.setState`：
+状态类是任何 React 类组件中的一个特殊字段。React 检测（monitors ）每一个组件状态的变化，但是为了 React 更加有效，我们必须通过 React 的另一个 API 改变状态字段，这就是我们要学习的另一个 API —— `this.setState`：
 
 
-```js
+```
 class CounterButton extends React.Component {
   state = {
     clickCounter: 0,
@@ -400,7 +402,7 @@ class CounterButton extends React.Component {
 ReactDOM.render(<CounterButton />, mountNode);
 ```
 
-例 13：setState 的 API
+<center>例 13：setState 的 API</center>
 
 这可能是最重要的一个例子因为这将是你完全理解 React 基础知识的方式。这个例子之后，还有一些小事情需要学习，但从那时起主要是你和你的 JavaScript 技能。
 
@@ -415,19 +417,18 @@ ReactDOM.render(<CounterButton />, mountNode);
 现在，注意我们更新状态使用两种不同的方式： 
 
 1. 通过传入一个函数然后返回一个对象。我们在 `handleClick` 函数内部这样做。
-2. 通过传入一个正则对象，我们在在区间回调中这样做。
+2. 通过传入一个正则对象，我们在在区间回调(interval callback)中这样做。
 
 这两种方式都是可以接受的，但是当你同时读写状态时，第一种方法是首选的（我们这样做）。在区间回调中，我们只向状态写入而不读它。当有问题时，总是使用第一个函数作为参数语法。伴随着竞争条件这更安全，因为 `setstate` 实际上是一个异步方法。
 
 我们应该怎样更新状态呢？我们返回一个有我们想要更新的的值的对象。注意，在调用 `setState` 时，我们全部都从状态中传入一个属性或者全都不。这完全是可以的因为 `setState` 实际上 **合并** 了你通过它（返回值的函数参数）与现有的状态，所以，没有指定一个属性在调用 `setState` 时意味着我们不希望改变属性（但不删除它）。
 
-[![](https://ws4.sinaimg.cn/large/006tNc79gy1fi6sqg2ygbj31320dawg9.jpg)](https://twitter.com/samerbuna/status/870383561983090689)
 
-#### 8 React 将要反应
+#### 8 React will react
 
-React 的名字是从状态改变的**反应**中得来的（虽然没有反应，但也是在一个时间表中）。这里有一个笑话，React 应该被命名为**Schedule**！
+React 的名字是从状态改变的 **反应**中得来的（虽然没有反应，但也是在一个时间表中）。这里有一个笑话，React 应该被命名为 **Schedule**！
 
-然而，当任何组件的状态被更新时，我们用肉眼观察到的是对该更新的反应，并自动反映了浏览器 DOM 中的更新（如果需要的话）。
+然而，当任何组件的状态被更新时，我们用肉眼观察到的是:对该更新的反应，并自动反映了浏览器 DOM 中的更新（如果需要的话）。
 
 将渲染函数的输入视为两种：
 - 通过父元素传入的属性
@@ -435,11 +436,11 @@ React 的名字是从状态改变的**反应**中得来的（虽然没有反应�
 
 当渲染函数的输入改变时，输出可能也会改变。
 
-React 保存了渲染的历史记录，当它看到一个渲染与前一个不同时，它将计算它们之间的差异，并将其有效地转换为在 DOM 中执行的实际 DOM 操作。
+React 保存了渲染的历史记录，当它看到一个渲染与前一个不同时，它将计算它们之间的差异，并将其有效地转换为在 DOM 中执行的实际 DOM 操作。(React keeps a record of the history of renders and when it sees that one render is different than the previous one, it’ll compute the difference between them and efficiently translate it into actual DOM operations that get executed in the DOM.)
 
-#### 9 React 是你的代码
+#### 9 React 是你的代理
 
-您可以将 React 看作是我们用来与浏览器通信的代理。以上面的当前时间戳显示为例。取代每一秒我们都需要手动去浏览器调用 DOM API 操作来查找和更新 `p#timestamp` 元素，我们仅仅改变组件的状态属性，React 做的工作代表我们与浏览器的通信。我相信这就是为什么 React 这么受欢迎的真正原因；我们只是不喜欢和浏览器先生谈话（以及它所说的 DOM 语言的很多方言），并且 React 自愿传递给我们，免费的！
+您可以将 React 看作是我们用来与浏览器通信的代理。以上面的当前时间戳显示为例。取代每一秒我们都需要手动去浏览器调用 DOM API 操作来查找和更新 `p#timestamp` 元素，我们仅仅改变组件的状态属性，React 做的工作代表我们与浏览器的通信。我相信这就是为什么 React 这么受欢迎的真正原因；我们只是不喜欢和浏览器先生谈话（以及它所说的 DOM 语言的很多方言），并且 React 自愿代理，免费的！
 
 #### 10 每一个 React 组件都有一个故事：第 2 部分
 
@@ -462,6 +463,8 @@ React 保存了渲染的历史记录，当它看到一个渲染与前一个不�
 信不信由你，通过上面所学的知识（或部分知识），你可以开始创建一些有趣的 React 应用程序。如果你渴望更多，看看我的 [**Pluralsight 的 React.js 入门课程**](https://www.pluralsight.com/courses/react-js-getting-started?aid=701j0000001heIoAAI&amp;promo=&amp;oid=&amp;utm_source=google&amp;utm_medium=ppc&amp;utm_campaign=US_Dynamic&amp;utm_content=&amp;utm_term=&amp;gclid=CNOAj_2-j9UCFUpNfgod4V0Fdg)。
 
 **感谢阅读。如果您觉得这篇文章有帮助，请点击原文中的 💚。请关注我的更多关于 React.js 和 JavaScript 的文章**。
+
+---
 
 ---
 
